@@ -25,3 +25,17 @@ For simplicity, this template builds Windows 10 executables using the `win32` ba
 ## Rounded Corners
 
 See [qrcode-gen@2939502](https://github.com/mokurin000/qrcode-gen/commit/2939502161d6f2b4345c9566dc6bdb761ae151dc) for a simple implementation that excludes the bottom rounded corners from the Android view size. You can also use it as a reference for implementing more sophisticated margin handling with proper DPI scaling.
+
+## Android Signing Key
+
+A default Android signing key is included for convenience. Before publishing your application, you should replace it with your own private signing key.
+
+Update the `android.yaml` workflow to generate `key.properties` and restore the keystore file by decoding a Base64-encoded GitHub secret, e.g.
+
+If you're unfamiliar with Android app signing or GitHub Actions secrets, feel free to ask an AI assistant for help.
+
+To generate your own keystore, utilize keytool from Java Development Kit:
+
+```bash
+keytool -genkey -alias testkey -keyalg RSA -keysize 2048 -validity 36500 -keystore mykey.keystore -storepass storepass
+```
