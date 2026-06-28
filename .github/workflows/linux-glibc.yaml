@@ -54,9 +54,7 @@ jobs:
         run: |
           cargo zigbuild \
             --release \
-            --target ${{ matrix.target }} \
-            --no-default-features \
-            -F qt
+            --target ${{ matrix.target }}
 
       - name: Collect
         shell: bash
