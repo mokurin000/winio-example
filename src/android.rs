@@ -1,6 +1,5 @@
 //! Android entry point for the QR code generator app.
 
-use android_activity::AndroidApp;
 use winio::prelude::*;
 
 use crate::model::MainModel;

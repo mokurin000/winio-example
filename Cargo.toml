@@ -4,36 +4,40 @@ version = "0.1.0"
 edition = "2024"
 
 # See https://github.com/burtonageo/cargo-bundle/tree/master#general-settings
-# Useful for packaging macOS .app, Linux .deb or Windows .msi, e.g.
+# Useful for packaging macOS (.app), Linux (.deb), or Windows (.msi) applications.
 [package.metadata.bundle]
 identifier = "io.github.mokurin000.example"
 
 [dependencies]
-# Error handling, logging
+# Error handling
 color-eyre = "0.6.5"
 
 # GUI
-winio = { version = "0.12.0-rc.5", features = [
+winio = { version = "0.12.0-rc.7", features = [
     "win32-dark-mode",
-    # enable this feature and uncomment `compio`
-    # if you want spawn I/O or computing tasks
+    # Enable this feature and uncomment `compio`
+    # if you need to spawn I/O or CPU-bound tasks.
     # "compio-compat",
 ], default-features = false }
 # compio = "0.19.0"
 
 [target.'cfg(target_os = "android")'.dependencies]
-# keep sync with winio
-android-activity = "0.6"
+# If you need to make additional JNI calls, you can use:
+# `self.window.as_window().to_android()`
+# to obtain the JNI handle to `MainActivity`.
+#
+# Always use `jni::vm::JavaVM::singleton` to obtain the JVM handle.
+# jni = "0.22"
 
 [lib]
-# don't touch: used in android/app/src/java/MainActivity.java
+# Required by `android/app/src/java/MainActivity.java`.
 name = "main"
 
 [[bin]]
 path = "src/main.rs"
-# if you want to modify the released prefix in CI,
-# it's not nessacary to modify the bin name. you can always
-# just update your artifact names.
+# If you want to customize the release artifact name in CI,
+# there's no need to change the binary name here.
+# Simply update the artifact name in your CI configuration.
 name = "app"
 
 [features]
@@ -46,7 +50,7 @@ win32 = ["winio/win32"]
 winui = ["winio/winui"]
 
 [profile.release]
-# we handle panic's via eyre
+# Panics are handled via `eyre`.
 panic = "abort"
 
 [profile.dev]

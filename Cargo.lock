@@ -1980,9 +1980,9 @@ dependencies = [
 
 [[package]]
 name = "taffy"
-version = "0.10.1"
+version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aea22054047c16c3f34d3ac473a2170be1424b1115b2a3adcf28cfb067c88859"
+checksum = "dfde4e2f8595f222ceaae1fb16b4963952e9b33e358869dc4cd6316b0e0790cd"
 dependencies = [
  "arrayvec",
  "grid",
@@ -2472,9 +2472,9 @@ checksum = "589f6da84c646204747d1270a2a5661ea66ed1cced2631d546fdfb155959f9ec"
 
 [[package]]
 name = "winio"
-version = "0.12.0-rc.6"
+version = "0.12.0-rc.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5c385853c4414b96bf8d636d05fbe65ac17d9a89d31254dd9bb7816fe33f3cbe"
+checksum = "576cf98cb8a5d627a93e4cadf996feef4557f4ff54b6518655dd6f035bce67ee"
 dependencies = [
  "android-activity",
  "cfg-if",
@@ -2521,9 +2521,9 @@ dependencies = [
 
 [[package]]
 name = "winio-handle"
-version = "0.7.0-rc.2"
+version = "0.7.0-rc.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "162de1f3c985c9cfd2084c53db389f087f2918b0fb107402b003843075fed32c"
+checksum = "f8e8fc0bb61dd4821b0e69961c3a0d582830f579e792fb89c24fcf0921adb37a"
 dependencies = [
  "cfg-if",
  "gtk4",
@@ -2538,9 +2538,9 @@ dependencies = [
 
 [[package]]
 name = "winio-layout"
-version = "0.3.0-rc.1"
+version = "0.3.0-rc.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "711e12ea4a630ae68e51c38581d8f742c65bb559f34f941b1c9063a8dca999e8"
+checksum = "b07e69bb8b5f0111b63301f10b032eeb6957dbcc3ca300453fc9887fcc521667"
 dependencies = [
  "paste",
  "taffy",
@@ -2574,16 +2574,15 @@ dependencies = [
 name = "winio-program"
 version = "0.1.0"
 dependencies = [
- "android-activity",
  "color-eyre",
  "winio",
 ]
 
 [[package]]
 name = "winio-ui-android"
-version = "0.1.0-rc.4"
+version = "0.1.0-rc.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eeb5eaf3fa1118732f612ca7c70c601b2e5ab9ad009b48efeedb004138a9a27a"
+checksum = "3dc183878a652872d09733f209667fac523fee96ae16661f7b68c93dd9e051d9"
 dependencies = [
  "android-activity",
  "compio",
@@ -2743,9 +2742,9 @@ dependencies = [
 
 [[package]]
 name = "winio-ui-windows-common"
-version = "0.7.0-rc.4"
+version = "0.7.0-rc.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b0d6951e861094296f1c7670c6cf1060ac4685dc15d3e59a59f048d537c2d6e7"
+checksum = "6afe1b5fea78511dd71acf92df583e70b2e2fc70b828999aa9b252cc40b5591c"
 dependencies = [
  "cfg-if",
  "compio-log",
@@ -2768,9 +2767,9 @@ dependencies = [
 
 [[package]]
 name = "winio-ui-winui"
-version = "0.6.0-rc.4"
+version = "0.6.0-rc.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e9deeea040e99a2ef2407a556c2f83e7407eb9ec670aeb5238e03c51d7fcb1ab"
+checksum = "75073b4ab4617243de7288b608963fb410504284ce665d9190e004d15dca4bba"
 dependencies = [
  "compio-log",
  "futures-util",
