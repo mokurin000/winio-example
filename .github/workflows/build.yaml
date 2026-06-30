@@ -38,7 +38,7 @@ jobs:
     needs:
       - windows
       - macos
-      - linux-glibc
+      # - linux-glibc
       - android
 
     runs-on: ubuntu-24.04
