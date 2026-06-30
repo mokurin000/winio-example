@@ -31,8 +31,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y \
             qt6-base-dev \
-            qt6-multimedia-dev \
-            qt6-webengine-dev
+            qt6-multimedia-dev
 
       - uses: Swatinem/rust-cache@v2
         with:
@@ -59,7 +58,7 @@ jobs:
             --release \
             --target ${{ matrix.target }} \
             --no-default-features \
-            -F enable_log,compio-compat,media,webview
+            -F enable_log,compio-compat,media
 
       - name: Collect
         shell: bash
