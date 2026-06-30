@@ -1,57 +1,86 @@
 [package]
-name = "winio-program"
+name = "winio-example"
 version = "0.1.0"
 edition = "2024"
 
-# See https://github.com/burtonageo/cargo-bundle/tree/master#general-settings
-# Useful for packaging macOS (.app), Linux (.deb), or Windows (.msi) applications.
-[package.metadata.bundle]
-identifier = "io.github.mokurin000.example"
-
-[dependencies]
-# Error handling
-color-eyre = "0.6.5"
-
-# GUI
-winio = { version = "0.12.0-rc.7", features = [
-    "win32-dark-mode",
-    # Enable this feature and uncomment `compio`
-    # if you need to spawn I/O or CPU-bound tasks.
-    # "compio-compat",
-], default-features = false }
-# compio = "0.19.0"
-
-[target.'cfg(target_os = "android")'.dependencies]
-# If you need to make additional JNI calls, you can use:
-# `self.window.as_window().to_android()`
-# to obtain the JNI handle to `MainActivity`.
-#
-# Always use `jni::vm::JavaVM::singleton` to obtain the JVM handle.
-# jni = "0.22"
-
 [lib]
-# Required by `android/app/src/java/MainActivity.java`.
 name = "main"
 
 [[bin]]
 path = "src/main.rs"
-# If you want to customize the release artifact name in CI,
-# there's no need to change the binary name here.
-# Simply update the artifact name in your CI configuration.
 name = "app"
 
+[dependencies]
+winio = { version = "0.12.0-rc.7", features = [
+    "win32",
+    "qt",
+    "windows-dark-mode",
+], default-features = false }
+compio = { version = "0.19", default-features = true, features = [
+    "time",
+    "rustls",
+    "ring",
+] }
+compio-log = { version = "0.2" }
+cyper = { version = "0.9.0", default-features = false, features = [
+    "rustls",
+    "http2",
+    "http3-altsvc",
+] }
+cyper-axum = "0.9.0"
+axum = { version = "0.8", default-features = false }
+
+anyhow = "1"
+bytemuck = { version = "1", optional = true, features = ["derive"] }
+cgmath = { version = "0.18", optional = true }
+dirs = "6.0"
+itertools = "0.15"
+plotters = { version = "0.3", default-features = false, features = [
+    "line_series",
+] }
+pulldown-cmark = "0.13"
+tracing-subscriber = "0.3"
+url = "2"
+
+local-sync = "0.1"
+cfg-if = "1"
+futures-util = "0.3"
+image = { version = "0.25", default-features = false, features = [
+    "default-formats",
+] }
+inherit-methods-macro = "0.1"
+plotters-backend = { version = "0.3", optional = true }
+send_wrapper = { version = "0.6", features = ["futures"] }
+wgpu = { version = "29", default-features = false, optional = true, features = [
+    "wgsl",
+] }
+
+[target.'cfg(target_os = "android")'.dependencies]
+tracing_android_trace = "0.1.0"
+
+jni = "0.22"
+rustls-platform-verifier = "0.7.0"
+
 [features]
-default = ["winui", "qt"]
+default = ["enable_log", "compio-compat", "media", "webview", "wgpu"]
+enable_log = ["winio/enable_log", "compio-log/enable_log"]
 
-gtk = ["winio/gtk"]
-qt = ["winio/qt"]
+media = ["winio/media"]
+webview = ["winio/webview"]
+compio-compat = ["winio/compio-compat"]
+wgpu = ["winio/wgpu", "dep:wgpu", "dep:bytemuck", "dep:cgmath"]
+all = ["media", "webview", "plotters", "wgpu", "compio-compat"]
 
-win32 = ["winio/win32"]
-winui = ["winio/winui"]
+# Canvas example
+plotters = ["winio/plotters", "dep:plotters-backend"]
 
-[profile.release]
-# Panics are handled via `eyre`.
-panic = "abort"
+nightly = [
+    "winio/nightly",
+    "compio/nightly",
+    "cyper/nightly",
+    "cyper-axum/nightly",
+]
 
-[profile.dev]
-debug = "limited"
+[package.metadata.bundle]
+name = "Widgets"
+identifier = "rs.compio.winio.widgets"

@@ -17,11 +17,11 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace 'io.github.mokurin000.example'
+    namespace 'rs.compio.winio.widgets'
     compileSdk 37
 
     defaultConfig {
-        applicationId "io.github.mokurin000.example"
+        applicationId "rs.compio.winio.widgets"
         minSdk 24
         targetSdk 37
         versionCode 1

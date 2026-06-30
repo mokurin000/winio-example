@@ -22,11 +22,8 @@ permissions:
   contents: write
 
 jobs:
-  windows-10:
-    uses: ./.github/workflows/windows-10.yaml
-
-  windows-11:
-    uses: ./.github/workflows/windows-11.yaml
+  windows:
+    uses: ./.github/workflows/windows.yaml
 
   macos:
     uses: ./.github/workflows/macos.yaml
@@ -39,8 +36,7 @@ jobs:
 
   release:
     needs:
-      - windows-10
-      - windows-11
+      - windows
       - macos
       - linux-glibc
       - android

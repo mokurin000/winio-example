@@ -1,0 +1,419 @@
+use std::{
+    collections::BTreeMap,
+    ffi::OsString,
+    ops::Deref,
+    path::{Path, PathBuf},
+};
+
+use compio::{
+    BufResult,
+    io::AsyncReadAtExt,
+    runtime::{ResumeUnwind, spawn, spawn_blocking},
+};
+use compio_log::error;
+use image::{DynamicImage, ImageReader};
+use itertools::Itertools;
+use winio::prelude::*;
+
+use crate::{Error, Result};
+
+pub struct GalleryPage {
+    window: Child<TabViewItem>,
+    canvas: Child<Canvas>,
+    scrollbar: Child<ScrollBar>,
+    start_button: Child<Button>,
+    browse_button: Child<Button>,
+    entry: Child<Edit>,
+    list: Child<ObservableVec<String>>,
+    listbox: Child<ListBox>,
+    images: Vec<DynamicImage>,
+    sel_images: BTreeMap<usize, Option<DrawingImage>>,
+    clip: bool,
+    clip_box: Child<CheckBox>,
+}
+
+const MAX_COLUMN: usize = 3;
+
+impl GalleryPage {
+    fn update_scrollbar(&mut self) -> Result<()> {
+        let pos = self.scrollbar.pos()?;
+
+        let size = self.canvas.size()?;
+        let occupy_width = size.width / (MAX_COLUMN as f64);
+        let content_width = occupy_width - 10.0;
+        let content_height: f64 = self
+            .sel_images
+            .keys()
+            .chunks(MAX_COLUMN)
+            .into_iter()
+            .map(|images| {
+                (images
+                    .map(|i| {
+                        let image = &self.images[*i];
+                        let image_size = Size::new(image.width() as _, image.height() as _);
+                        (image_size.height
+                            * (content_width / image_size.width.max(image_size.height)))
+                            as usize
+                    })
+                    .max()
+                    .unwrap_or_default() as f64)
+                    .min(content_width)
+                    + 10.0
+            })
+            .sum();
+        self.scrollbar.set_maximum(content_height as _)?;
+        self.scrollbar.set_page(size.height as _)?;
+        self.scrollbar.set_pos(pos)?;
+        Ok(())
+    }
+}
+
+#[derive(Debug)]
+pub enum GalleryPageEvent {
+    ChooseFolder,
+}
+
+#[derive(Debug)]
+pub enum GalleryPageMessage {
+    Noop,
+    Redraw,
+    ChooseFolder,
+    Start,
+    OpenFolder(PathBuf),
+    Clear,
+    Append(OsString, DynamicImage),
+    List(ObservableVecEvent<String>),
+    Select,
+    Wheel(Vector),
+    ClipClick,
+}
+
+impl Component for GalleryPage {
+    type Error = Error;
+    type Event = GalleryPageEvent;
+    type Init<'a> = ();
+    type Message = GalleryPageMessage;
+
+    async fn init(_init: Self::Init<'_>, sender: &ComponentSender<Self>) -> Result<Self> {
+        let path = if cfg!(target_os = "android") {
+            None
+        } else {
+            dirs::picture_dir()
+        };
+        init! {
+            window: TabViewItem = (()) => {
+                text: "Images",
+            },
+            canvas: Canvas = (&window),
+            scrollbar: ScrollBar = (&window) => {
+                orient: Orient::Vertical,
+                minimum: 0,
+            },
+            start_button: Button = (&window) => {
+                text: "Read",
+            },
+            browse_button: Button = (&window) => {
+                text: "Browse...",
+            },
+            entry: Edit = (&window) => {
+                text: path.as_ref()
+                          .map(|p| p.to_string_lossy().into_owned())
+                          .unwrap_or_default(),
+            },
+            list: ObservableVec<String> = ([]),
+            listbox: ListBox = (&window) => {
+                multiple: true,
+            },
+            clip_box: CheckBox = (&window) => {
+                text: "Clip",
+                checked: false,
+            }
+        }
+
+        if let Some(path) = path {
+            let sender = sender.clone();
+            spawn(fetch(path, sender)).detach();
+        }
+
+        Ok(Self {
+            window,
+            canvas,
+            scrollbar,
+            start_button,
+            browse_button,
+            entry,
+            list,
+            listbox,
+            images: vec![],
+            sel_images: BTreeMap::new(),
+            clip: false,
+            clip_box,
+        })
+    }
+
+    async fn start(&mut self, sender: &ComponentSender<Self>) -> ! {
+        start! {
+            sender, default: GalleryPageMessage::Noop,
+            self.canvas => {
+                CanvasEvent::MouseWheel(w) => GalleryPageMessage::Wheel(w),
+            },
+            self.start_button => {
+                ButtonEvent::Click => GalleryPageMessage::Start,
+            },
+            self.browse_button => {
+                ButtonEvent::Click => GalleryPageMessage::ChooseFolder,
+            },
+            self.list => {
+                e => GalleryPageMessage::List(e),
+            },
+            self.listbox => {
+                ListBoxEvent::Select => GalleryPageMessage::Select,
+            },
+            self.scrollbar => {
+                ScrollBarEvent::Change => GalleryPageMessage::Redraw,
+            },
+            self.clip_box => {
+                CheckBoxEvent::Click => GalleryPageMessage::ClipClick,
+            }
+        }
+    }
+
+    async fn update_children(&mut self) -> Result<bool> {
+        update_children!(
+            self.window,
+            self.canvas,
+            self.scrollbar,
+            self.start_button,
+            self.browse_button,
+            self.entry,
+            self.list,
+            self.listbox
+        )
+    }
+
+    async fn update(
+        &mut self,
+        message: Self::Message,
+        sender: &ComponentSender<Self>,
+    ) -> Result<bool> {
+        self.update_scrollbar()?;
+        match message {
+            GalleryPageMessage::Noop => Ok(false),
+            GalleryPageMessage::Redraw => Ok(true),
+            GalleryPageMessage::ChooseFolder => {
+                sender.output(GalleryPageEvent::ChooseFolder);
+                Ok(false)
+            }
+            GalleryPageMessage::Start => {
+                let p = PathBuf::from(self.entry.text()?);
+                let sender = sender.clone();
+                spawn(fetch(p, sender)).detach();
+                Ok(true)
+            }
+            GalleryPageMessage::OpenFolder(p) => {
+                self.entry.set_text(p.to_str().unwrap_or_default())?;
+                let sender = sender.clone();
+                spawn(fetch(p, sender)).detach();
+                Ok(true)
+            }
+            GalleryPageMessage::Clear => {
+                self.list.clear();
+                self.images.clear();
+                self.sel_images.clear();
+                Ok(true)
+            }
+            GalleryPageMessage::Append(filename, image) => {
+                self.list.push(filename.to_string_lossy().into_owned());
+                self.images.push(image);
+                Ok(true)
+            }
+            GalleryPageMessage::List(e) => Ok(self
+                .listbox
+                .emit(ListBoxMessage::from_observable_vec_event(e))
+                .await?),
+            GalleryPageMessage::Select => {
+                for i in 0..self.list.len() {
+                    if self.listbox.is_selected(i)? {
+                        self.sel_images.entry(i).or_insert(None);
+                    } else {
+                        self.sel_images.remove(&i);
+                    }
+                }
+                Ok(true)
+            }
+            GalleryPageMessage::Wheel(w) => {
+                let delta = w.y;
+                let pos = self.scrollbar.pos()?;
+                self.scrollbar
+                    .set_pos((pos as f64 - delta).max(0.0) as usize)?;
+                Ok(true)
+            }
+            GalleryPageMessage::ClipClick => {
+                self.clip = self.clip_box.is_checked()?;
+                Ok(true)
+            }
+        }
+    }
+
+    fn render(&mut self, _sender: &ComponentSender<Self>) -> Result<()> {
+        let csize = self.window.size()?;
+
+        {
+            let mut button_panel = layout! {
+                Grid::from_str("1*,1*,auto","1*").unwrap(),
+                self.start_button => { column: 0 },
+                self.browse_button => { column: 1 },
+                self.clip_box => { column: 2 },
+            };
+            let mut content_panel = layout! {
+                StackPanel::new(Orient::Horizontal),
+                self.listbox,
+                self.canvas => { grow: true },
+                self.scrollbar,
+            };
+            let mut root_panel = layout! {
+                StackPanel::new(Orient::Vertical),
+                self.entry,
+                button_panel,
+                content_panel => { grow: true },
+            };
+            root_panel.set_size(csize)?;
+        }
+
+        let pos = self.scrollbar.pos()?;
+
+        let size = self.canvas.size()?;
+        let mut ctx = self.canvas.context()?;
+        let is_dark = ColorTheme::current()? == ColorTheme::Dark;
+        let brush = SolidColorBrush::new(if is_dark {
+            Color::new(255, 255, 255, 255)
+        } else {
+            Color::new(0, 0, 0, 255)
+        });
+        let pen = BrushPen::new(&brush, 1.0);
+
+        let occupy_width = size.width / (MAX_COLUMN as f64);
+        let content_width = occupy_width - 10.0;
+        for (i, image) in self.sel_images.iter_mut() {
+            if image.is_none() {
+                let cache = ctx.create_image(self.images[*i].clone())?;
+                *image = Some(cache);
+            }
+        }
+        let content_heights = self
+            .sel_images
+            .values()
+            .chunks(MAX_COLUMN)
+            .into_iter()
+            .map(|images| {
+                (images
+                    .filter_map(|image| {
+                        let image_size = image.as_ref()?.size().ok()?;
+                        Some(
+                            (image_size.height
+                                * (content_width / image_size.width.max(image_size.height)))
+                                as usize,
+                        )
+                    })
+                    .max()
+                    .unwrap_or_default() as f64)
+                    .min(content_width)
+            })
+            .collect::<Vec<_>>();
+        for (i, image) in self.sel_images.values().enumerate() {
+            if let Some(image) = image {
+                let image_size = image.size()?;
+                let c = i % MAX_COLUMN;
+                let r = i / MAX_COLUMN;
+                let x = c as f64 * occupy_width + 5.0;
+                let y =
+                    content_heights[..r].iter().map(|h| h + 10.0).sum::<f64>() + 5.0 - pos as f64;
+                let content_height = content_heights[r];
+                let rect = Rect::new(Point::new(x, y), Size::new(content_width, content_height));
+                let rate =
+                    (content_width / image_size.width).min(content_height / image_size.height);
+                let real_width = image_size.width * rate;
+                let real_height = image_size.height * rate;
+                let real_x = (content_width - real_width) / 2.0;
+                let real_y = (content_height - real_height) / 2.0;
+                let real_rect = Rect::new(
+                    Point::new(x + real_x, y + real_y),
+                    Size::new(real_width, real_height),
+                );
+                let clip = if self.clip {
+                    Some(Rect::new(
+                        Point::new(image_size.width / 4.0, image_size.height / 4.0),
+                        image_size / 2.0,
+                    ))
+                } else {
+                    None
+                };
+                ctx.draw_image(image, real_rect, clip)?;
+                ctx.draw_rect(&pen, rect)?;
+            }
+        }
+        Ok(())
+    }
+}
+
+impl Deref for GalleryPage {
+    type Target = TabViewItem;
+
+    fn deref(&self) -> &Self::Target {
+        &self.window
+    }
+}
+
+async fn fetch(path: impl AsRef<Path>, sender: ComponentSender<GalleryPage>) {
+    sender.post(GalleryPageMessage::Clear);
+    let dir = match read_uri_dir(path) {
+        Ok(dir) => dir,
+        Err(e) => {
+            error!("Failed to read directory: {e:?}");
+            return;
+        }
+    };
+    for p in dir {
+        let entry = match p {
+            Ok(e) => e,
+            Err(e) => {
+                error!("Failed to read directory entry: {e:?}");
+                continue;
+            }
+        };
+        let Ok(ty) = entry.file_type() else {
+            continue;
+        };
+        if !ty.is_file() {
+            continue;
+        }
+        let p = entry.path();
+        let file = match UriFile::open(&p).await {
+            Ok(f) => f,
+            Err(e) => {
+                error!("Failed to open file: {e:?}");
+                continue;
+            }
+        };
+        let data = match file.read_to_end_at(vec![], 0).await {
+            BufResult(Ok(_), data) => data,
+            BufResult(Err(e), _) => {
+                error!("Failed to read file: {e:?}");
+                continue;
+            }
+        };
+        let image = spawn_blocking(move || {
+            let reader = ImageReader::new(std::io::Cursor::new(data))
+                .with_guessed_format()
+                .ok()?;
+            let image = reader.decode().ok()?;
+            Some(image)
+        })
+        .await
+        .resume_unwind()
+        .flatten();
+        if let Some(image) = image {
+            sender.post(GalleryPageMessage::Append(entry.file_name(), image));
+        }
+    }
+}

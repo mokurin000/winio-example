@@ -13,11 +13,11 @@ jobs:
 
       matrix:
         include:
-          - artifact: app-win11-x86_64.exe
+          - artifact: app-x86_64.exe
             runner: windows-2022
             target: x86_64-pc-windows-msvc
 
-          - artifact: app-win11-arm64.exe
+          - artifact: app-arm64.exe
             runner: windows-2022
             target: aarch64-pc-windows-msvc
 

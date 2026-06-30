@@ -1,25 +1,19 @@
-//! Application entry point.
-
-#![windows_subsystem = "windows"]
-
-use main::Result;
-
-/// Desktop entry point (Windows / Linux / macOS).
 #[cfg(not(target_os = "android"))]
-fn main() -> Result<()> {
+fn main() -> main::Result<()> {
+    use main::MainModel;
     use winio::prelude::*;
 
-    use main::APP_ID;
-    use main::model::MainModel;
+    tracing_subscriber::fmt()
+        .with_max_level(compio_log::Level::INFO)
+        .init();
 
     App::builder()
-        .name(APP_ID)
+        .name("rs.compio.winio.widgets")
         .build()?
         .block_on(MainModel::run_until_event(()))
 }
 
-/// Android entry point is `android_main` instead.
 #[cfg(target_os = "android")]
-fn main() -> Result<()> {
+fn main() {
     unreachable!("Android entry point is `android_main` in `android.rs`")
 }

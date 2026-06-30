@@ -1,4 +1,4 @@
-package io.github.mokurin000.example;
+package rs.compio.winio.widgets;
 
 import rs.compio.winio.Activity;
 
