@@ -4,7 +4,10 @@ core = "1.19.0"
 gamesActivity = "4.4.2"
 appcompat = "1.7.1"
 material = "1.14.0"
+
 rustlsPlatformVerifier = "latest.release"
+media3Ui = "1.10.1"
+viewpager2 = "1.1.0"
 
 [libraries]
 core = { module = "androidx.core:core", version.ref = "core" }
@@ -13,6 +16,9 @@ appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "a
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 winio = { module = "compio:winio", version = "latest.release" }
 rustls-platform-verifier = { module = "rustls:rustls-platform-verifier", version.ref = "rustlsPlatformVerifier" }
+viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
+media3-ui = { module = "androidx.media3:media3-ui", version.ref = "media3Ui" }
+media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3Ui" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
