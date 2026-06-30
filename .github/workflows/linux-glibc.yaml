@@ -29,7 +29,10 @@ jobs:
       - name: Install Qt6
         run: |
           sudo apt-get update
-          sudo apt-get install -y qt6-base-dev
+          sudo apt-get install -y \
+            qt6-base-dev \
+            qt6-multimedia-dev \
+            qt6-webengine-dev
 
       - uses: Swatinem/rust-cache@v2
         with:
