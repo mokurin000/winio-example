@@ -23,6 +23,10 @@ dependencyResolutionManagement {
             url = findWinioUiAndroidProject()
             metadataSources.artifact()
         }
+        maven {
+            url = findRustlsPlatformVerifierProject()
+            metadataSources.artifact()
+        }
     }
 }
 
@@ -39,5 +43,16 @@ String findWinioUiAndroidProject() {
 
     def dependencyJson = new JsonSlurper().parseText(dependencyText)
     def manifestPath = file(dependencyJson.packages.find { it.name == "winio-ui-android" }.manifest_path)
+    return new File(manifestPath.parentFile, "maven").path
+}
+
+String findRustlsPlatformVerifierProject() {
+    def dependencyText = providers.exec {
+        it.workingDir = new File("../")
+        commandLine("cargo", "metadata", "--format-version", "1", "--manifest-path", "Cargo.toml")
+    }.standardOutput.asText.get()
+
+    def dependencyJson = new JsonSlurper().parseText(dependencyText)
+    def manifestPath = file(dependencyJson.packages.find { it.name == "rustls-platform-verifier-android" }.manifest_path)
     return new File(manifestPath.parentFile, "maven").path
 }

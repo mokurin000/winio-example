@@ -1,5 +1,12 @@
+-keep, includedescriptorclasses class org.rustls.platformverifier.** { *; }
 -keep, includedescriptorclasses class com.google.androidgamesdk.** { *; }
 -keep, includedescriptorclasses class com.google.android.material.button.** { *; }
--keep, includedescriptorclasses class rs.compio.winio.Activity { *; }
+-keep, includedescriptorclasses class com.google.android.material.checkbox.** { *; }
+-keep, includedescriptorclasses class com.google.android.material.radiobutton.** { *; }
+-keep, includedescriptorclasses class com.google.android.material.progressindicator.** { *; }
+-keep, includedescriptorclasses class com.google.android.material.slider.** { *; }
+-keep, includedescriptorclasses class com.google.android.material.tabs.** { *; }
+-keep, includedescriptorclasses class androidx.media3.** { *; }
+-keep, includedescriptorclasses class androidx.viewpager2.widget.** { *; }
 -keep, includedescriptorclasses class androidx.activity.result.** { *; }
--keep, includedescriptorclasses class rs.compio.winio.widgets.** { *; }
+-keep, includedescriptorclasses class rs.compio.winio.* { *; }
