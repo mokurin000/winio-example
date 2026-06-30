@@ -58,7 +58,7 @@ jobs:
             --release \
             --target ${{ matrix.target }} \
             --no-default-features \
-            -F enable_log,compio-compat,media
+            -F enable_log,compio-compat,media,plotters
 
       - name: Collect
         shell: bash

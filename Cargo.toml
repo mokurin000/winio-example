@@ -35,9 +35,6 @@ bytemuck = { version = "1", optional = true, features = ["derive"] }
 cgmath = { version = "0.18", optional = true }
 dirs = "6.0"
 itertools = "0.15"
-plotters = { version = "0.3", default-features = false, features = [
-    "line_series",
-] }
 pulldown-cmark = "0.13"
 tracing-subscriber = "0.3"
 url = "2"
@@ -49,7 +46,12 @@ image = { version = "0.25", default-features = false, features = [
     "default-formats",
 ] }
 inherit-methods-macro = "0.1"
+
+plotters = { version = "0.3", default-features = false, features = [
+    "line_series",
+] }
 plotters-backend = { version = "0.3", optional = true }
+
 send_wrapper = { version = "0.6", features = ["futures"] }
 wgpu = { version = "29", default-features = false, optional = true, features = [
     "wgsl",
@@ -62,7 +64,7 @@ jni = "0.22"
 rustls-platform-verifier = "0.7.0"
 
 [features]
-default = ["enable_log", "compio-compat", "media", "webview", "wgpu"]
+default = ["enable_log", "all"]
 enable_log = ["winio/enable_log", "compio-log/enable_log"]
 
 media = ["winio/media"]
