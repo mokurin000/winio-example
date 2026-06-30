@@ -69,10 +69,16 @@ dependencies {
 
     implementation libs.core
     implementation libs.games.activity
+
+    // winio
     implementation libs.winio
+    // tabview
     implementation libs.viewpager2
+    // media
     implementation libs.media3.exoplayer
     implementation libs.media3.ui
+    // cyper-rustls: native certs
+    implementation libs.rustls.platform.verifier
 }
 
 [
