@@ -64,13 +64,15 @@ android {
 }
 
 dependencies {
-    implementation libs.core
     implementation libs.appcompat
     implementation libs.material
 
+    implementation libs.core
     implementation libs.games.activity
-
     implementation libs.winio
+    implementation libs.viewpager2
+    implementation libs.media3.exoplayer
+    implementation libs.media3.ui
 }
 
 [
