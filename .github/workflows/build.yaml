@@ -25,6 +25,9 @@ jobs:
   windows:
     uses: ./.github/workflows/windows.yaml
 
+  windows-10:
+    uses: ./.github/workflows/windows-10.yaml
+
   macos:
     uses: ./.github/workflows/macos.yaml
 
