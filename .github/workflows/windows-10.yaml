@@ -13,11 +13,11 @@ jobs:
 
       matrix:
         include:
-          - artifact: app-x86_64.exe
+          - artifact: app-win10-x86_64.exe
             runner: windows-2022
             target: x86_64-pc-windows-msvc
 
-          - artifact: app-arm64.exe
+          - artifact: app-win10-arm64.exe
             runner: windows-11-arm
             target: aarch64-pc-windows-msvc
 
@@ -39,6 +39,10 @@ jobs:
         run: |
           cargo build \
             --release \
+            --no-default-features \
+            --features win32 \
+            --features all \
+            --features enable_log \
             --target ${{ matrix.target }}
 
       - name: Collect
