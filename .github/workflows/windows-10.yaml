@@ -1,4 +1,4 @@
-name: build-windows-11
+name: build-windows-10
 
 on:
   workflow_call:
