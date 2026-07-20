@@ -320,9 +320,9 @@ checksum = "72b3254f16251a8381aa12e40e3c4d2f0199f8c6508fbecb9d91f575e0fbb8c6"
 
 [[package]]
 name = "bit-set"
-version = "0.9.1"
+version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34ddef2995421ab6a5c779542c81ee77c115206f4ad9d5a8e05f4ff49716a3dd"
+checksum = "09ec2f926cc3060f09db9ebc5b52823d85268d24bb917e472c0c4bea35780a7d"
 dependencies = [
  "bit-vec",
 ]
@@ -951,7 +951,7 @@ dependencies = [
  "cxxbridge-cmd",
  "cxxbridge-flags",
  "cxxbridge-macro",
- "foldhash 0.2.0",
+ "foldhash",
  "link-cplusplus",
 ]
 
@@ -1353,12 +1353,6 @@ name = "fnv"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3f9eec918d3f24069decb9af1554cad7c880e2da24a9afd88aca000531ab82c1"
-
-[[package]]
-name = "foldhash"
-version = "0.1.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d9c4f5dac5e15c24eb999c26181a6ca40b39fe946cbe4c263c7209467bc83af2"
 
 [[package]]
 name = "foldhash"
@@ -1775,26 +1769,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "gpu-descriptor"
-version = "0.3.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b89c83349105e3732062a895becfc71a8f921bb71ecbbdd8ff99263e3b53a0ca"
-dependencies = [
- "bitflags",
- "gpu-descriptor-types",
- "hashbrown 0.15.5",
-]
-
-[[package]]
-name = "gpu-descriptor-types"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fdf242682df893b86f33a73828fb09ca4b2d3bb6cc95249707fc684d27484b91"
-dependencies = [
- "bitflags",
-]
-
-[[package]]
 name = "graphene-rs"
 version = "0.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1964,22 +1938,13 @@ dependencies = [
 
 [[package]]
 name = "hashbrown"
-version = "0.15.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9229cfe53dfd69f0609a49f65461bd93001ea1ef889cd5529dd176593f5338a1"
-dependencies = [
- "foldhash 0.1.5",
-]
-
-[[package]]
-name = "hashbrown"
 version = "0.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "841d1cc9bed7f9236f321df977030373f4a4163ae1a7dbfe1a51a2c1a51d9100"
 dependencies = [
  "allocator-api2",
  "equivalent",
- "foldhash 0.2.0",
+ "foldhash",
 ]
 
 [[package]]
@@ -1987,6 +1952,9 @@ name = "hashbrown"
 version = "0.17.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ed5909b6e89a2db4456e54cd5f673791d7eca6732202bbf2a9cc504fe2f9b84a"
+dependencies = [
+ "foldhash",
+]
 
 [[package]]
 name = "heck"
@@ -1999,12 +1967,6 @@ name = "hermit-abi"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fc0fef456e4baa96da950455cd02c081ca953b141298e41db3fc7e36b1da849c"
-
-[[package]]
-name = "hexf-parse"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dfa686283ad6dd069f105e5ab091b04c62850d3e4cf5d67debad1933f55023df"
 
 [[package]]
 name = "html-escape"
@@ -2681,9 +2643,9 @@ dependencies = [
 
 [[package]]
 name = "naga"
-version = "29.0.3"
+version = "30.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0dd91265cc2454558f659b3b4b9640f0ddb8cc6521277f166b8a8c181c898079"
+checksum = "23bf0a141a9ab6f07dbb492db53245e464bc9db42f407772d9ae03d83a2c1033"
 dependencies = [
  "arrayvec",
  "bit-set",
@@ -2692,17 +2654,29 @@ dependencies = [
  "cfg_aliases",
  "codespan-reporting",
  "half",
- "hashbrown 0.16.1",
- "hexf-parse",
+ "hashbrown 0.17.1",
  "indexmap",
  "libm",
  "log",
+ "naga-types",
  "num-traits",
  "once_cell",
  "rustc-hash 1.1.0",
  "spirv",
  "thiserror 2.0.18",
  "unicode-ident",
+]
+
+[[package]]
+name = "naga-types"
+version = "30.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "658200ddc25c6c7b860747516d132d1b284c0fafb7a380233acee9a72fb30e11"
+dependencies = [
+ "hashbrown 0.17.1",
+ "indexmap",
+ "rustc-hash 1.1.0",
+ "thiserror 2.0.18",
 ]
 
 [[package]]
@@ -3184,6 +3158,7 @@ dependencies = [
  "bitflags",
  "objc2",
  "objc2-core-foundation",
+ "objc2-core-graphics",
  "objc2-foundation",
  "objc2-metal",
 ]
@@ -3575,14 +3550,15 @@ dependencies = [
 
 [[package]]
 name = "qt-build-utils"
-version = "0.8.1"
+version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4d074750fd3baba12fdb47388d591ad9ed043e23864a79d129dcf3a1ef6fc8d9"
+checksum = "8e575368c069f599b9918e592ce6eb6b4bc04d52b6825f7fcc89500f9e1de96b"
 dependencies = [
  "anyhow",
  "cc",
  "semver",
  "thiserror 1.0.69",
+ "which",
 ]
 
 [[package]]
@@ -4347,9 +4323,9 @@ dependencies = [
 
 [[package]]
 name = "taffy"
-version = "0.11.0"
+version = "0.12.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dfde4e2f8595f222ceaae1fb16b4963952e9b33e358869dc4cd6316b0e0790cd"
+checksum = "340a09581f29809fc0df82a3955501dc7f2a21f887e5d1c13dbe288fe1c0bef4"
 dependencies = [
  "arrayvec",
  "grid",
@@ -5020,9 +4996,9 @@ checksum = "a28ac98ddc8b9274cb41bb4d9d4d5c425b6020c50c46f25559911905610b4a88"
 
 [[package]]
 name = "wgpu"
-version = "29.0.3"
+version = "30.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bb3feacc458f7bee8bc1737149b42b6c731aa461039a4264a67bb6681646b250"
+checksum = "6d8f4bd44d92da5270f03409dba9f952dab24f128e05d6a554926101d1bf9114"
 dependencies = [
  "arrayvec",
  "bitflags",
@@ -5030,7 +5006,7 @@ dependencies = [
  "cfg-if",
  "cfg_aliases",
  "document-features",
- "hashbrown 0.16.1",
+ "hashbrown 0.17.1",
  "log",
  "portable-atomic",
  "profiling",
@@ -5044,9 +5020,9 @@ dependencies = [
 
 [[package]]
 name = "wgpu-core"
-version = "29.0.3"
+version = "30.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "02da3ad1b568337f25513b317870960ef87073ea0945502e44b864b67a8c77b7"
+checksum = "08763620e76fc980bca7bf84de82568614487a53172dd968d89187282eb87fa2"
 dependencies = [
  "arrayvec",
  "bit-set",
@@ -5055,10 +5031,11 @@ dependencies = [
  "bytemuck",
  "cfg_aliases",
  "document-features",
- "hashbrown 0.16.1",
+ "hashbrown 0.17.1",
  "indexmap",
  "log",
  "naga",
+ "naga-types",
  "once_cell",
  "parking_lot",
  "portable-atomic",
@@ -5076,27 +5053,27 @@ dependencies = [
 
 [[package]]
 name = "wgpu-core-deps-apple"
-version = "29.0.3"
+version = "30.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "62e51b5447e144b3dbba4feb01f80f4fa21696fa0cd99afb2c3df1affd6fdb28"
+checksum = "3283b6da70d7fc892de95840215aa36381b5d0cbc479e88ee2b173c7b992b225"
 dependencies = [
  "wgpu-hal",
 ]
 
 [[package]]
 name = "wgpu-core-deps-windows-linux-android"
-version = "29.0.3"
+version = "30.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1bfb01076d0aa08b0ba9bd741e178b5cc440f5abe99d9581323a4c8b5d1a1916"
+checksum = "f76bc9c1c186ff3d9054e0d224c93c8c1c79d6653907c5249a5c1ea1a2cb1e43"
 dependencies = [
  "wgpu-hal",
 ]
 
 [[package]]
 name = "wgpu-hal"
-version = "29.0.3"
+version = "30.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "31f8e1a9e7a8512f276f7c62e018c7fa8d60954303fed2e5750114332049193f"
+checksum = "cf765132d8d5f50e192e7880464890c13f4e7457aafe8e5466e8174586e9f101"
 dependencies = [
  "android_system_properties",
  "arrayvec",
@@ -5108,14 +5085,15 @@ dependencies = [
  "cfg-if",
  "cfg_aliases",
  "gpu-allocator",
- "gpu-descriptor",
- "hashbrown 0.16.1",
+ "hashbrown 0.17.1",
  "libc",
  "libloading",
  "log",
  "naga",
+ "naga-types",
  "objc2",
  "objc2-core-foundation",
+ "objc2-core-graphics",
  "objc2-foundation",
  "objc2-metal",
  "objc2-quartz-core",
@@ -5130,6 +5108,7 @@ dependencies = [
  "raw-window-metal",
  "renderdoc-sys",
  "smallvec",
+ "static_assertions",
  "thiserror 2.0.18",
  "wgpu-naga-bridge",
  "wgpu-types",
@@ -5139,9 +5118,9 @@ dependencies = [
 
 [[package]]
 name = "wgpu-naga-bridge"
-version = "29.0.3"
+version = "30.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "59c654c483f058800972c3645e95388a7eca31bf9fe1933bc20e036588a0be02"
+checksum = "c9eaac644e5008925c78567d272b9d66ef83da55a53cc17fc7daade7bb6e66e5"
 dependencies = [
  "naga",
  "wgpu-types",
@@ -5149,14 +5128,25 @@ dependencies = [
 
 [[package]]
 name = "wgpu-types"
-version = "29.0.3"
+version = "30.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a9bcc31518a0e9735aefebedb5f7a9ef3ed1c42549c9f4c882fa9060ceaac639"
+checksum = "1a9c93c2b35edde326df60ffdee4c0f5864eac3011d6768b70d43f028ad93565"
 dependencies = [
  "bitflags",
  "bytemuck",
  "log",
+ "naga-types",
  "raw-window-handle",
+ "static_assertions",
+]
+
+[[package]]
+name = "which"
+version = "8.0.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8f3ef584124b911bcc3875c2f1472e80f24361ceb789bd1c62b3e9a3df9ff43c"
+dependencies = [
+ "libc",
 ]
 
 [[package]]
@@ -5411,8 +5401,7 @@ checksum = "589f6da84c646204747d1270a2a5661ea66ed1cced2631d546fdfb155959f9ec"
 [[package]]
 name = "winio"
 version = "0.12.0-rc.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "576cf98cb8a5d627a93e4cadf996feef4557f4ff54b6518655dd6f035bce67ee"
+source = "git+https://github.com/compio-rs/winio.git#6d49634455124678be4b9b717f57ee6e7f568cb9"
 dependencies = [
  "android-activity",
  "cfg-if",
@@ -5433,6 +5422,7 @@ dependencies = [
  "winio-ui-app-kit",
  "winio-ui-gtk",
  "winio-ui-qt",
+ "winio-ui-stub",
  "winio-ui-ui-kit",
  "winio-ui-win32",
  "winio-ui-windows-common",
@@ -5442,14 +5432,12 @@ dependencies = [
 [[package]]
 name = "winio-callback"
 version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fa5e72e288f175cdd92f9debc1125035f6043787ef73f2e466349c29d5df9865"
+source = "git+https://github.com/compio-rs/winio.git#6d49634455124678be4b9b717f57ee6e7f568cb9"
 
 [[package]]
 name = "winio-elm"
 version = "0.6.0-rc.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5b436fa6d06389563ee3342061da8e62aef2be0b3a035192d2f266f55a12977a"
+source = "git+https://github.com/compio-rs/winio.git#6d49634455124678be4b9b717f57ee6e7f568cb9"
 dependencies = [
  "async-stream",
  "futures-util",
@@ -5496,8 +5484,7 @@ dependencies = [
 [[package]]
 name = "winio-handle"
 version = "0.7.0-rc.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f8e8fc0bb61dd4821b0e69961c3a0d582830f579e792fb89c24fcf0921adb37a"
+source = "git+https://github.com/compio-rs/winio.git#6d49634455124678be4b9b717f57ee6e7f568cb9"
 dependencies = [
  "cfg-if",
  "gtk4",
@@ -5513,8 +5500,7 @@ dependencies = [
 [[package]]
 name = "winio-layout"
 version = "0.3.0-rc.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b07e69bb8b5f0111b63301f10b032eeb6957dbcc3ca300453fc9887fcc521667"
+source = "git+https://github.com/compio-rs/winio.git#6d49634455124678be4b9b717f57ee6e7f568cb9"
 dependencies = [
  "paste",
  "taffy",
@@ -5525,8 +5511,7 @@ dependencies = [
 [[package]]
 name = "winio-pollable"
 version = "0.5.0-rc.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ce9c9067c1bbd9b8e1bf8fa4943bd84baca409b1ea8a4848a5f1ad1e941dc6f0"
+source = "git+https://github.com/compio-rs/winio.git#6d49634455124678be4b9b717f57ee6e7f568cb9"
 dependencies = [
  "futures-util",
  "scoped-tls",
@@ -5536,8 +5521,7 @@ dependencies = [
 [[package]]
 name = "winio-primitive"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2dd79331f59d1e7178e653476761df7c8098ef44b5cbbd19fd58d15d46401f5e"
+source = "git+https://github.com/compio-rs/winio.git#6d49634455124678be4b9b717f57ee6e7f568cb9"
 dependencies = [
  "bitflags",
  "euclid",
@@ -5547,8 +5531,7 @@ dependencies = [
 [[package]]
 name = "winio-ui-android"
 version = "0.1.0-rc.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3dc183878a652872d09733f209667fac523fee96ae16661f7b68c93dd9e051d9"
+source = "git+https://github.com/compio-rs/winio.git#6d49634455124678be4b9b717f57ee6e7f568cb9"
 dependencies = [
  "android-activity",
  "base64",
@@ -5576,14 +5559,14 @@ dependencies = [
 [[package]]
 name = "winio-ui-app-kit"
 version = "0.6.0-rc.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "37f5f2a958bc89c66fe6b6bbbf938bd0996079357ca95a6d8e99f0c42899b5f6"
+source = "git+https://github.com/compio-rs/winio.git#6d49634455124678be4b9b717f57ee6e7f568cb9"
 dependencies = [
  "arrayvec",
  "block2",
  "compio",
  "compio-log",
  "cookie",
+ "futures-util",
  "image",
  "inherit-methods-macro",
  "local-sync",
@@ -5611,8 +5594,7 @@ dependencies = [
 [[package]]
 name = "winio-ui-apple-common"
 version = "0.1.0-rc.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fd4c20a448e5d04883e106af2f940af37e6b471726a6ad28fc2502f9c465169c"
+source = "git+https://github.com/compio-rs/winio.git#6d49634455124678be4b9b717f57ee6e7f568cb9"
 dependencies = [
  "compio-log",
  "cookie",
@@ -5631,8 +5613,7 @@ dependencies = [
 [[package]]
 name = "winio-ui-gtk"
 version = "0.6.0-rc.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f74e1f359815c1f5b785d287fdff386ca4a404c5f76206c0f7a6558e7114c90a"
+source = "git+https://github.com/compio-rs/winio.git#6d49634455124678be4b9b717f57ee6e7f568cb9"
 dependencies = [
  "compio",
  "compio-log",
@@ -5659,8 +5640,7 @@ dependencies = [
 [[package]]
 name = "winio-ui-qt"
 version = "0.6.0-rc.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "08bb591cccbdd78a2e04de222e1c05d3ac263cfc33db2b0ec4baaef75e9fc162"
+source = "git+https://github.com/compio-rs/winio.git#6d49634455124678be4b9b717f57ee6e7f568cb9"
 dependencies = [
  "bitflags",
  "compio",
@@ -5668,6 +5648,7 @@ dependencies = [
  "cookie",
  "cxx",
  "cxx-build",
+ "futures-util",
  "html-escape",
  "image",
  "inherit-methods-macro",
@@ -5684,10 +5665,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "winio-ui-stub"
+version = "0.1.0-rc.1"
+source = "git+https://github.com/compio-rs/winio.git#6d49634455124678be4b9b717f57ee6e7f568cb9"
+dependencies = [
+ "compio",
+ "cookie",
+ "image",
+ "inherit-methods-macro",
+ "wgpu",
+ "winio-handle",
+ "winio-primitive",
+ "winio-ui-windows-common",
+]
+
+[[package]]
 name = "winio-ui-ui-kit"
 version = "0.1.0-rc.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b5ea1e987d7cd6e7eaf5d62c259d6c2a0680a6bb7d9b5a28154fa35275daec4a"
+source = "git+https://github.com/compio-rs/winio.git#6d49634455124678be4b9b717f57ee6e7f568cb9"
 dependencies = [
  "block2",
  "compio",
@@ -5722,8 +5717,7 @@ dependencies = [
 [[package]]
 name = "winio-ui-win32"
 version = "0.6.0-rc.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5dba99b9b61f92fcce091e57950d871d38240375069fbb5cf559b614dda58537"
+source = "git+https://github.com/compio-rs/winio.git#6d49634455124678be4b9b717f57ee6e7f568cb9"
 dependencies = [
  "arrayvec",
  "compio",
@@ -5754,12 +5748,12 @@ dependencies = [
 [[package]]
 name = "winio-ui-windows-common"
 version = "0.7.0-rc.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6afe1b5fea78511dd71acf92df583e70b2e2fc70b828999aa9b252cc40b5591c"
+source = "git+https://github.com/compio-rs/winio.git#6d49634455124678be4b9b717f57ee6e7f568cb9"
 dependencies = [
  "cfg-if",
  "compio-log",
  "embed-resource",
+ "futures-util",
  "image",
  "once_cell",
  "oneshot",
@@ -5779,8 +5773,7 @@ dependencies = [
 [[package]]
 name = "winio-ui-winui"
 version = "0.6.0-rc.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "75073b4ab4617243de7288b608963fb410504284ce665d9190e004d15dca4bba"
+source = "git+https://github.com/compio-rs/winio.git#6d49634455124678be4b9b717f57ee6e7f568cb9"
 dependencies = [
  "compio",
  "compio-log",
