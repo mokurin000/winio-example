@@ -11,7 +11,7 @@ path = "src/main.rs"
 name = "app"
 
 [dependencies]
-winio = { git = "https://github.com/compio-rs/winio.git", features = [
+winio = { version = "0.12.0", features = [
     "qt",
     "windows-dark-mode",
 ], default-features = false }
