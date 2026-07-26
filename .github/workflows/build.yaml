@@ -34,8 +34,8 @@ jobs:
   linux-glibc:
     uses: ./.github/workflows/linux-glibc.yaml
 
-  # android:
-  #   uses: ./.github/workflows/android.yaml
+  android:
+    uses: ./.github/workflows/android.yaml
 
   release:
     needs:
@@ -43,8 +43,7 @@ jobs:
       - windows-10
       - macos
       - linux-glibc
-      # disable for now: git dep does not provide maven package
-      # - android
+      - android
 
     runs-on: ubuntu-24.04
 
